@@ -1,11 +1,5 @@
 
-# source("EM4.R") # change on theta estimate in Mstep (use log transformation to avoid negative estimate)
-# source("EM5.R") # to speed up EM4.R a little bit
-# source("simulate_10192011.R")
 rm(list = ls(all = TRUE))
-#source("~/Novartis_Survival/EM5.R")
-#source("~/Novartis_Survival/simulate_10192011.R")
-#source("~/Novartis_Survival/Covest.R")
 source("EM5.R")
 source("simulate_10192011.R")
 source("Covest.R")
@@ -19,7 +13,6 @@ nsim <- as.integer(input[5])
 
 library(survival)
 require(splines)
-#library(Design)
 library(Hmisc)
 
 nsim <- 5
@@ -52,8 +45,6 @@ for (m in 1:nsim) {
   d1 <- tmp$duniq
   dat <- tmp$dwhole
   rm(tmp)
-  # dat$x <- dat$x/10
-  # d1$x <- d1$x/10
   Surv.est[m, ] <- coxph(Surv(Survt, event) ~ x+ A0+ frailty(ID, method='em'),dat)$coefficients
 
   Npla[m] <- nrow(dat[dat$A0==0,])/n0-1
@@ -128,6 +119,3 @@ for (m in 1:nsim) {
   cov.data <- data.frame(indexV=rep(index, nsim), covbetav) 
   write.table(sim.data, file="SimData.txt", sep="\t", row.names=FALSE, col.names=FALSE)
   write.table(cov.data, file="SimCov.txt", sep="\t", row.names=FALSE, col.names=FALSE)
-
-date()
-
